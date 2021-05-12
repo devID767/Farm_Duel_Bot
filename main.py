@@ -6,8 +6,7 @@ from pyrogram.errors import FloodWait
 
 app = Client("farm_duel")
 
-
-@app.on_message(filters.reply& filters.me & filters.command("add", prefixes="."))
+@app.on_message(filters.reply & filters.me & filters.command("add", prefixes="."))
 def Add(client, message):
     customer = app.get_messages(message.chat.id, reply_to_message_ids=message.message_id).from_user
     if IsInList(customer.id):
@@ -37,10 +36,14 @@ def Duel(client, message):
            if Oldmessage.from_user.is_self & IsInList(message.from_user.id):
                 try:
                    message.reply_text("Реанимировать жабу", quote = False)
+                   sleep(0.2)
                    message.reply_text("дуэль принять", quote=True)
+                   sleep(0.2)
                    message.reply_text("дуэль старт", quote = False)
                 except FloodWait as e:
                    sleep(e.x)
+        elif message.text.lower() == "твой инвентарь":
+            message.reply_text("Мой инвентарь")
 
 def IsInList(id):
     IsInCustomer = False
