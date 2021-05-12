@@ -36,7 +36,7 @@ def Duel(client, message):
            if Oldmessage.from_user.is_self & IsInList(message.from_user.id):
                 try:
                    message.reply_text("Реанимировать жабу", quote = False)
-                   sleep(0.2)
+                   sleep(0.1)
                    message.reply_text("дуэль принять", quote=True)
                    sleep(0.2)
                    message.reply_text("дуэль старт", quote = False)
