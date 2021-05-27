@@ -7,6 +7,22 @@ from pyrogram.errors import FloodWait
 app = Client("farm_duel")
 
 @app.on_message(filters.text & filters.command('admins', prefixes='.'))
+def Help(client, message):
+    customer = app.get_messages(message.chat.id, reply_to_message_ids=message.message_id).from_user
+    if customer.is_self:
+        message.reply_text(f'Commands for all:\n'
+                            f'твой инвентарь (ответом на мое сообщение)\n'
+                            f'твой балланс (ответом на мое сообщение)\n\n'
+                            f'Commands for customers:\n'
+                            f'Дуєль (Ответом на мое сообщение)\n\n'
+                            f'Commands for admins:'
+                            f'.admins'
+                            f'.customers'
+                            f'.reapeat [message]'
+                            f'.add [customer]'
+                            f'.remove [customer]')
+
+@app.on_message(filters.text & filters.command('admins', prefixes='.'))
 def ShowAdmins(client, message):
     if message.from_user.is_self or str(message.from_user.id) in Admins:
          for admin in Admins:
@@ -27,18 +43,14 @@ def Repeat(client, message):
 @app.on_message(filters.reply & filters.command("add", prefixes="."))
 def Add(client, message):
     customer = app.get_messages(message.chat.id, reply_to_message_ids=message.message_id).from_user
-    try:
-        if message.text.split()[1] == 'admin' and message.from_user.is_self:
-            list = Admins
-            filename = 'Admins'
-        elif not message.from_user.is_self:
-            message.reply_text('У вас нет прав!')
-    except:
-        if message.from_user.is_self or str(message.from_user.id) in Admins:
-            list = Customers
-            filename = 'Customers'
-        else:
-            message.reply_text('У вас нет прав!')
+    if message.text.split()[1] == 'admin' and message.from_user.is_self:
+        list = Admins
+        filename = 'Admins'
+    elif message.text.split()[1] == 'customer' and (message.from_user.is_self or str(message.from_user.id) in Admins):
+        list = Customers
+        filename = 'Customers'
+    elif not message.from_user.is_self:
+        message.reply_text('У вас нет прав!')
 
 
     if IsInList(str(customer.id), list):
@@ -58,7 +70,7 @@ def Remove(client, message):
     if message.text.split()[1] == 'admin' and message.from_user.is_self:
         list = Admins
         filename = 'Admins'
-    elif message.from_user.is_self or str(message.from_user.id) in Admins:
+    elif message.text.split()[1] == 'customer' and (message.from_user.is_self or str(message.from_user.id) in Admins):
         list = Customers
         filename = 'Customers'
     elif not message.from_user.is_self:
