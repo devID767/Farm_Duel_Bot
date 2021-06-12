@@ -6,7 +6,7 @@ from pyrogram.errors import FloodWait
 
 app = Client("farm_duel")
 
-@app.on_message(filters.text & filters.command('admins', prefixes='.'))
+@app.on_message(filters.text & filters.command('help', prefixes='.'))
 def Help(client, message):
     customer = app.get_messages(message.chat.id, reply_to_message_ids=message.message_id).from_user
     if customer.is_self:
@@ -77,17 +77,17 @@ def Remove(client, message):
         message.reply_text('У вас нет прав!')
 
     if IsInList(str(customer_id), list):
-        message.reply_text(f"{list[customer_id]} удален из {filename}!")
+        message.reply_text(f"{list[str(customer_id)]} удален из {filename}!")
         del list[str(customer_id)]
         saveList(list, filename)
     else:
-        message.reply_text(f"{list[customer_id]} не находится в {filename}!")
+        message.reply_text(f"{list[str(customer_id)]} не находится в {filename}!")
 
 @app.on_message(filters.text & filters.reply)
 def Duel(client, message):
         if message.text.lower() == "дуэль":
            Oldmessage = app.get_messages(message.chat.id, reply_to_message_ids = message.message_id)
-           if Oldmessage.from_user.is_self & IsInList(message.from_user.id, Customers):
+           if Oldmessage.from_user.is_self & IsInList(str(message.from_user.id), Customers):
                 try:
                    message.reply_text("Реанимировать жабу", quote = False)
                    sleep(0.1)
